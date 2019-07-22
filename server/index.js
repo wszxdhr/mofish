@@ -1,10 +1,12 @@
+import config from './config'
 import { getConfig } from './utils/configs'
 import commander from 'commander'
 import PackageConfig from '../package'
 import { getValidPort } from './utils/portInUsed'
 import PluginsRouter from './router/plugins'
 import Koa from 'koa'
-
+import bodyParser from 'koa-bodyparser'
+import koaStatic from 'koa-static'
 // 解析命令行参数
 commander.version(`Version: ${PackageConfig.version}`)
   .option('-p, --port [port]', 'Set port for Frame Process.')
@@ -13,14 +15,21 @@ commander.parse(process.argv);
 
 (async function () {
   const settings = getConfig()
+  global.settings = settings
 
   const port = await getValidPort(settings.port || commander.port || 8080)
 
   const app = new Koa()
 
   app
+    .use(bodyParser())
     .use(PluginsRouter.routes())
     .use(PluginsRouter.allowedMethods())
+  if (!commander.dev) {
+    app.use(koaStatic(
+      config.frontendPath
+    ))
+  }
 
   app.listen(port)
 

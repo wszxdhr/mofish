@@ -4,6 +4,7 @@ const home = os.homedir()
 
 export default {
   configPath: path.join(home, '.mofish/config.json'),
+  frontendPath: path.join(__dirname, '../../dist'),
   dir: path.join(home, '.mofish'),
   defaultConfigJson: () => ({
     projects: [],

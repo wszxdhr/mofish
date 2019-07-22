@@ -4,7 +4,7 @@ import fsExists from '../utils/fsExists'
 // require('color')
 import path from 'path'
 
-export function getConfig (name) {
+export function getConfig () {
   try {
     console.log('Reading and parsing Config File...')
     const configStr = fs.readFileSync(config.configPath).toString()
@@ -20,7 +20,7 @@ export function getConfig (name) {
       const hasFile = fsExists(config.configPath)
       // 如果有文件先备份
       if (hasFile) {
-        fs.copyFileSync(config.configPath, path.join(config.configPath, `./config_${timestamp}_bk.json`))
+        fs.copyFileSync(config.configPath, path.join(config.configPath, `../config_${timestamp}_bk.json`))
       }
     } else {
       fs.mkdirSync(config.dir)
@@ -32,5 +32,11 @@ export function getConfig (name) {
 }
 
 export function setConfig (value) {
-  fs.writeFileSync(config.configPath, value)
+  if (typeof value === 'function') {
+    const result = value(getConfig())
+    fs.writeFileSync(config.configPath, JSON.stringify(result))
+  } else {
+    console.log('write', config.configPath, value)
+    fs.writeFileSync(config.configPath, JSON.stringify(value))
+  }
 }

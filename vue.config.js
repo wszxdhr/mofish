@@ -7,5 +7,14 @@ module.exports = {
         changeOrigin: true
       }
     }
+  },
+  css: {
+    loaderOptions: {
+      sass: {
+        data: `
+          @import "@/assets/style/base.scss";
+        `
+      }
+    }
   }
 }

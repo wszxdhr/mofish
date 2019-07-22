@@ -6,7 +6,7 @@ const router = new Router()
 router.prefix('/api/plugins')
 
 router.get('/list', async (ctx, next) => {
-  response(ctx, 200, getConfig() || [])
+  response(ctx, 200, getConfig().plugins || [])
   await next()
 })
 

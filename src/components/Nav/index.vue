@@ -3,8 +3,8 @@
     <el-menu-item index="home">
       <logo></logo>
     </el-menu-item>
-    <el-menu-item index="3">首页</el-menu-item>
-    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+    <el-menu-item index="3">Dashboard</el-menu-item>
+    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">Proxy</a></el-menu-item>
   </el-menu>
 </template>
 

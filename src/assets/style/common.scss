@@ -54,3 +54,14 @@
 .text-placeholder {
   color: $placeholder-text-color;
 }
+
+.no-border-table {
+  .el-table__row {
+    td {
+      border-bottom: 0;
+    }
+  }
+  &:before {
+    display: none;
+  }
+}

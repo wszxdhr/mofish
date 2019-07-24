@@ -3,17 +3,8 @@ module.exports = {
     port: 8908,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/',
+        target: 'http://localhost:8888/',
         changeOrigin: true
-      }
-    }
-  },
-  css: {
-    loaderOptions: {
-      sass: {
-        data: `
-          @import "@/assets/style/base.scss";
-        `
       }
     }
   }

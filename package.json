@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:server": "nodemon server/index.js --watch server --exec \"npm run lint:server && babel-node --presets env --plugins babel-plugin-syntax-object-rest-spread\"",
+    "dev:server": "nodemon server/index.js --watch server --port 8888 --exec \"npm run lint:server && babel-node --presets env --plugins babel-plugin-syntax-object-rest-spread\"",
     "test:exec": "babel-node --presets env -- server/index.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

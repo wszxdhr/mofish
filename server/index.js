@@ -7,11 +7,10 @@ import loadPlugins from './utils/loadPlugins'
 import PluginsRouter from './router/plugins'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
-import koaStatic from 'koa-static'
+// import koaStatic from 'koa-static'
 // 解析命令行参数
 commander.version(`Version: ${PackageConfig.version}`)
   .option('-p, --port [port]', 'Set port for Frame Process.')
-  .option('-d, --dev', 'Development mode. Use this option, Mofish will not start frontend process.')
 commander.parse(process.argv);
 
 (async function () {
@@ -28,11 +27,12 @@ commander.parse(process.argv);
     .use(bodyParser())
     .use(PluginsRouter.routes())
     .use(PluginsRouter.allowedMethods())
-  if (!commander.dev) {
-    app.use(koaStatic(
-      config.frontendPath
-    ))
-  }
+  // 处理插件信息
+  // if (!commander.dev) {
+  //   app.use(koaStatic(
+  //     config.frontendPath
+  //   ))
+  // }
 
   app.listen(port)
 

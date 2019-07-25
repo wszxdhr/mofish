@@ -1,10 +1,14 @@
 {
   "name": "mofish",
-  "bin": "server/mofish.js",
+  "bin": {
+    "mofish": "server/mofish.js",
+    "mofish-dev": "server/dev/index.js"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev:server": "nodemon server/index.js --watch server --port 8888 --exec \"npm run lint:server && babel-node --presets env --plugins babel-plugin-syntax-object-rest-spread\"",
+    "dev:plugin": "babel-node --presets env --plugins babel-plugin-syntax-object-rest-spread -- server/dev/index.js",
     "test:exec": "babel-node --presets env -- server/index.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

@@ -1,5 +1,6 @@
 <template>
   <section class="home-plugins">
+<!--    插件列表-->
     <el-card shadow="hover">
       <div slot="header" class="clearfix">
         <span>Plugins</span>
@@ -14,12 +15,21 @@
         </el-table-column>
         <el-table-column>
           <template slot-scope="scope">
-            <p class="text-main-black">{{ scope.row.name }}</p>
+            <div class="text-main-black">
+              <span>{{ scope.row.name }}</span>
+              <el-tag effect="dark" v-if="scope.row.type === 'local'" size="mini" style="margin-left: 10px;">Local</el-tag>
+            </div>
             <p class="text-placeholder">{{ scope.row.path }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column width="120px">
+          <template slot-scope="scope">
+            <el-button type="danger" icon="el-icon-delete" circle @click="deletePlugin(scope.row.name)"></el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+<!--    添加插件-->
     <el-dialog title="Add plugin" :visible.sync="showAddDialog" width="600px">
       <div class="plugin-type-switch-wrap">
         <el-tabs v-model="pluginType" class="plugin-type-switch">
@@ -48,13 +58,12 @@
 </template>
 
 <script>
-import { getPlugins, addPlugins } from '@/api/service/plugins'
+import { addPlugin, deletePlugin } from '@/api/service/plugins'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'HomePlugins',
   data () {
     return {
-      // 插件列表
-      pluginList: [],
       // 展示添加插件的模态框
       showAddDialog: false,
       // 添加插件的搜索框
@@ -68,8 +77,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'refreshPlugins'
+    ]),
     addLocalPlugin () {
-      addPlugins({
+      addPlugin({
         name: this.addLocalPluginForm.name,
         path: this.addLocalPluginForm.path,
         type: 'local'
@@ -78,7 +90,7 @@ export default {
           this.$message.success('Add plugin success')
           this.showAddDialog = false
           this.clearAddPluginForm()
-          this.refreshPluginList()
+          this.refreshPlugins()
         }
       })
     },
@@ -86,18 +98,33 @@ export default {
       this.addLocalPluginForm.path = ''
       this.addLocalPluginForm.name = ''
     },
-    refreshPluginList () {
-      this.pluginList = []
-      getPlugins().then(res => {
-        if (!res.result) {
-          this.pluginList = res.data
-        }
+    deletePlugin (pluginName) {
+      this.$confirm(`Are you sure to delete plugin "${pluginName}"?`, 'Confirm', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        deletePlugin({
+          name: pluginName
+        }).then(res => {
+          if (!res.result) {
+            this.$message({
+              type: 'success',
+              message: `Plugin "${pluginName}" has been deleted.`
+            })
+            this.refreshPlugins()
+          }
+        })
       })
     }
   },
+  computed: {
+    ...mapGetters({
+      pluginList: 'getPlugins'
+    })
+  },
   created () {
-    console.log(getPlugins)
-    this.refreshPluginList()
+    this.refreshPlugins()
   }
 }
 </script>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home'
 import HomePlugins from './views/Home/Plugins'
+import PluginPage from './views/PluginPage/index'
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
         component: HomePlugins,
         path: 'plugins'
       }]
+    }, {
+      path: '/plugin',
+      name: 'pluginPage',
+      component: PluginPage
     }
     // {
     //   path: '/about',

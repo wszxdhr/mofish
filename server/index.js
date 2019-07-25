@@ -3,6 +3,7 @@ import { getConfig } from './utils/configs'
 import commander from 'commander'
 import PackageConfig from '../package'
 import { getValidPort } from './utils/portInUsed'
+import loadPlugins from './utils/loadPlugins'
 import PluginsRouter from './router/plugins'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
@@ -20,6 +21,8 @@ commander.parse(process.argv);
   const port = await getValidPort(settings.port || commander.port || 8080)
 
   const app = new Koa()
+
+  loadPlugins(settings)
 
   app
     .use(bodyParser())

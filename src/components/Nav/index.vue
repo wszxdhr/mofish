@@ -18,6 +18,13 @@ export default {
       activeIndex: 'plugins'
     }
   },
+  created () {
+    if (this.$route.name === 'pluginPage') {
+      this.activeIndex = this.$route.query.name
+    } else {
+      this.activeIndex = 'plugins'
+    }
+  },
   methods: {
     handleSelect () {}
   },

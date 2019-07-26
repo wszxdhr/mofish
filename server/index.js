@@ -5,6 +5,7 @@ import PackageConfig from '../package'
 import { getValidPort } from './utils/portInUsed'
 import loadPlugins from './utils/loadPlugins'
 import PluginsRouter from './router/plugins'
+// import FrontendRouter from './router/frontend'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 // import koaStatic from 'koa-static'
@@ -23,18 +24,15 @@ global.commander = commander;
 
   const app = new Koa()
 
-  loadPlugins(settings)
+  await loadPlugins(settings)
 
   app
     .use(bodyParser())
     .use(PluginsRouter.routes())
     .use(PluginsRouter.allowedMethods())
-  // 处理插件信息
-  // if (!commander.dev) {
-  //   app.use(koaStatic(
-  //     config.frontendPath
-  //   ))
-  // }
+  if (commander.dev) {
+    console.log('Mofish is running in Development Mode.')
+  }
 
   app.listen(port)
 

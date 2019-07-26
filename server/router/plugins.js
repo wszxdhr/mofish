@@ -1,6 +1,8 @@
 import Router from 'koa-router'
 import { response, check } from '../utils/response'
 import { setConfig, getConfig } from '../utils/configs'
+import { loadPlugin } from '../utils/loadPlugins'
+import { deleteStaticServer } from '../utils/frontendStatic'
 const router = new Router()
 
 router.prefix('/api/plugins')
@@ -25,7 +27,13 @@ router.delete('/delete', async (ctx, next) => {
   }
   const { name } = query
   const curConfig = getConfig()
-  curConfig.plugins = (curConfig.plugins || []).filter(item => item.name !== name)
+  curConfig.plugins = (curConfig.plugins || []).filter(item => {
+    if (item.name === name) {
+      deleteStaticServer(name)
+      return false
+    }
+    return true
+  })
   setConfig(curConfig)
   response(ctx, 200, null)
   await next()
@@ -54,17 +62,23 @@ router.post('/add', async (ctx, next) => {
     })
   } else {
     const plugins = curConfig.plugins || []
+    let plugin = null
     switch (type) {
-      case 'local': plugins.push({
-        name,
-        type,
-        path
-      })
+      case 'local':
+        plugin = {
+          name,
+          type,
+          path
+        }
+        plugins.push(plugin)
     }
     setConfig({
       ...curConfig,
       plugins
     })
+    if (plugin) {
+      await loadPlugin(global.pluginInfo, plugin)
+    }
     response(ctx, 200, null)
   }
   await next()

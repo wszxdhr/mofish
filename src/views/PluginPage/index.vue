@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-page">
-    <iframe :src="`/frontend/${plugin.info.frontend}`" frameborder="0"></iframe>
+    <iframe v-if="plugin && plugin.info && plugin.info.frontendPath" :src="plugin.info.frontendPath" frameborder="0"></iframe>
   </div>
 </template>
 
@@ -19,9 +19,7 @@ export default {
           return plugin
         }
       }
-      return {
-        info: {}
-      }
+      return null
     }
   }
 }

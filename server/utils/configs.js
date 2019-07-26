@@ -36,7 +36,7 @@ export function setConfig (value) {
     const result = value(getConfig())
     fs.writeFileSync(config.configPath, JSON.stringify(result))
   } else {
-    console.log('write', config.configPath, value)
+    console.log('write', config.configPath)
     fs.writeFileSync(config.configPath, JSON.stringify(value))
   }
 }

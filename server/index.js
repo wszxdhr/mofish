@@ -1,4 +1,4 @@
-import config from './config'
+// import config from './config'
 import { getConfig } from './utils/configs'
 import commander from 'commander'
 import PackageConfig from '../package'
@@ -11,7 +11,9 @@ import bodyParser from 'koa-bodyparser'
 // 解析命令行参数
 commander.version(`Version: ${PackageConfig.version}`)
   .option('-p, --port [port]', 'Set port for Frame Process.')
-commander.parse(process.argv);
+  .option('--dev', 'Development mode.')
+commander.parse(process.argv)
+global.commander = commander;
 
 (async function () {
   const settings = getConfig()

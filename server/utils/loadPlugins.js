@@ -1,13 +1,11 @@
 export default function (settings) {
-  const pluginInfo = []
+  const pluginInfo = {}
   let currentPlugin = null
   try {
     for (const plugin of settings.plugins) {
       currentPlugin = plugin
-      pluginInfo.push({
-        ...require(plugin.path).default,
-        plugin
-      })
+      pluginInfo[plugin.name] = require(plugin.path).default
+      pluginInfo[plugin.name].isDev = global.commander.dev
     }
     global.pluginInfo = pluginInfo
   } catch (err) {

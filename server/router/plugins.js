@@ -6,7 +6,11 @@ const router = new Router()
 router.prefix('/api/plugins')
 
 router.get('/list', async (ctx, next) => {
-  response(ctx, 200, getConfig().plugins || [])
+  const result = (getConfig().plugins || []).map(plugin => ({
+    ...plugin,
+    info: global.pluginInfo[plugin.name]
+  }))
+  response(ctx, 200, result)
   await next()
 })
 

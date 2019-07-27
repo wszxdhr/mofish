@@ -1,5 +1,11 @@
 import { getValidPort } from './portInUsed'
-import { addStaticServer } from './frontendStatic'
+import { addStaticServer, deleteStaticServer } from './frontendStatic'
+import eventBus from '../utils/eventBus'
+import { response, check } from '../utils/response'
+import Koa from 'koa'
+import KoaStatic from 'koa-static'
+import { getPluginConfig, setPluginConfig } from '../utils/configs'
+const pluginModules = {}
 
 export default async function (settings) {
   const pluginInfo = {}
@@ -23,6 +29,36 @@ export const loadPlugin = async (pluginInfo, plugin) => {
   pluginInfo[plugin.name].port = port
   pluginInfo[plugin.name].isDev = global.commander.dev
   pluginInfo[plugin.name].pluginName = plugin.name
-  addStaticServer(pluginInfo[plugin.name])
+  await initPlugin(pluginInfo[plugin.name], plugin)
+  await addStaticServer(pluginInfo[plugin.name])
   return pluginInfo[plugin.name]
+}
+
+export const unloadPlugin = async (pluginName) => {
+  await deleteStaticServer(pluginName)
+  await destroyPlugin(pluginName)
+}
+
+export const initPlugin = async (pluginInfo, plugin) => {
+  const MofishPlugin = pluginInfo.main
+  pluginModules[plugin.name] = new MofishPlugin({
+    libs: {
+      Koa,
+      KoaStatic
+    },
+    utils: {
+      response,
+      check,
+      // getPluginConfig函数返回一个函数，和setPluginConfig不同
+      getConfig: getPluginConfig(plugin.name),
+      setConfig: setPluginConfig
+    },
+    eventBus,
+    plugins: global.pluginInfo,
+    pluginObjects: pluginModules
+  })
+}
+
+export const destroyPlugin = async (pluginName) => {
+  pluginModules[pluginName].destroy && pluginModules[pluginName].destroy()
 }

@@ -36,7 +36,38 @@ export function setConfig (value) {
     const result = value(getConfig())
     fs.writeFileSync(config.configPath, JSON.stringify(result))
   } else {
-    console.log('write', config.configPath)
     fs.writeFileSync(config.configPath, JSON.stringify(value))
+  }
+}
+
+export function getPluginConfig (pluginName) {
+  const pluginsDirPath = path.join(config.dir, 'plugins')
+  const pluginDirPath = path.join(pluginsDirPath, pluginName)
+  const pluginConfigPath = path.join(pluginDirPath, 'config.json')
+  for (const _path of [pluginsDirPath, pluginDirPath]) {
+    if (!fsExists(_path)) {
+      fs.mkdirSync(_path)
+    }
+  }
+  if (!fsExists(pluginConfigPath)) {
+    fs.writeFileSync(pluginConfigPath, JSON.stringify({
+      // 插件整体配置
+      settings: {},
+      // 不同的产品不同的配置
+      products: {}
+    }))
+  }
+  return () => {
+    return require(pluginConfigPath)
+  }
+}
+
+export function setPluginConfig (pluginName, value) {
+  const pluginConfigPath = path.join(config.dir, 'plugins', pluginName, 'config.json')
+  if (typeof value === 'function') {
+    const result = value(getConfig(pluginName))
+    fs.writeFileSync(pluginConfigPath, JSON.stringify(result))
+  } else {
+    fs.writeFileSync(pluginConfigPath, JSON.stringify(value))
   }
 }

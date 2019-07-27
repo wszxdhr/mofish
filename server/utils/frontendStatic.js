@@ -16,6 +16,7 @@ export const addStaticServer = (pluginInfo) => {
 export const deleteStaticServer = (pluginName) => {
   if (staticMap[pluginName].hasOwnProperty('server')) {
     staticMap[pluginName].server.close()
+    delete staticMap[pluginName]
     console.log(`Plugin "${pluginName}" is stopped.`)
   }
 }

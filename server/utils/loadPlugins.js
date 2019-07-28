@@ -4,6 +4,7 @@ import eventBus from '../utils/eventBus'
 import { response, check } from '../utils/response'
 import Koa from 'koa'
 import KoaStatic from 'koa-static'
+import KoaRouter from 'koa-router'
 import { getPluginConfig, setPluginConfig } from '../utils/configs'
 const pluginModules = {}
 
@@ -42,9 +43,11 @@ export const unloadPlugin = async (pluginName) => {
 export const initPlugin = async (pluginInfo, plugin) => {
   const MofishPlugin = pluginInfo.main
   pluginModules[plugin.name] = new MofishPlugin({
+    name: plugin.name,
     libs: {
       Koa,
-      KoaStatic
+      KoaStatic,
+      KoaRouter
     },
     utils: {
       response,
@@ -61,4 +64,8 @@ export const initPlugin = async (pluginInfo, plugin) => {
 
 export const destroyPlugin = async (pluginName) => {
   pluginModules[pluginName].destroy && pluginModules[pluginName].destroy()
+}
+
+export const getPluginModule = (pluginName) => {
+  return pluginModules[pluginName]
 }

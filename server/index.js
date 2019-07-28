@@ -5,6 +5,8 @@ import PackageConfig from '../package'
 import { getValidPort } from './utils/portInUsed'
 import loadPlugins from './utils/loadPlugins'
 import PluginsRouter from './router/plugins'
+import PluginRouter from './router/plugin'
+import ProjectRouter from './router/projects'
 // import FrontendRouter from './router/frontend'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
@@ -30,6 +32,10 @@ global.commander = commander;
     .use(bodyParser())
     .use(PluginsRouter.routes())
     .use(PluginsRouter.allowedMethods())
+    .use(PluginRouter.routes())
+    .use(PluginRouter.allowedMethods())
+    .use(ProjectRouter.routes())
+    .use(ProjectRouter.allowedMethods())
   if (commander.dev) {
     console.log('Mofish is running in Development Mode.')
   }

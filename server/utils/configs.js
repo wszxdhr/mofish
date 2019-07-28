@@ -54,7 +54,7 @@ export function getPluginConfig (pluginName) {
       // 插件整体配置
       settings: {},
       // 不同的产品不同的配置
-      products: {}
+      projects: {}
     }))
   }
   return () => {
@@ -65,7 +65,7 @@ export function getPluginConfig (pluginName) {
 export function setPluginConfig (pluginName, value) {
   const pluginConfigPath = path.join(config.dir, 'plugins', pluginName, 'config.json')
   if (typeof value === 'function') {
-    const result = value(getConfig(pluginName))
+    const result = value(getPluginConfig(pluginName)())
     fs.writeFileSync(pluginConfigPath, JSON.stringify(result))
   } else {
     fs.writeFileSync(pluginConfigPath, JSON.stringify(value))

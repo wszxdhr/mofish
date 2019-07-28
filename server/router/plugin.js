@@ -1,87 +1,18 @@
 import Router from 'koa-router'
-import { response, check } from '../utils/response'
-import { setConfig, getConfig } from '../utils/configs'
-import { loadPlugin, unloadPlugin } from '../utils/loadPlugins'
+import { getPluginModule } from '../utils/loadPlugins'
+// import eventBus from '../utils/eventBus'
 const router = new Router()
 
-router.prefix('/api/plugins')
+router.prefix('/plugin')
 
-router.get('/list', async (ctx, next) => {
-  const result = (getConfig().plugins || []).map(plugin => ({
-    ...plugin,
-    info: global.pluginInfo[plugin.name]
-  }))
-  response(ctx, 200, result)
-  await next()
-})
-
-router.delete('/delete', async (ctx, next) => {
-  const query = ctx.request.query
-  if (!check(query, [['name', 'string']])) {
-    response(ctx, 400, null, {
-      message: 'Param error, check it and retry.'
-    })
-    await next()
-    return
-  }
-  const { name } = query
-  const curConfig = getConfig()
-  curConfig.plugins = (curConfig.plugins || []).filter(async item => {
-    if (item.name === name) {
-      console.log('find static server')
-      await unloadPlugin(name)
-      return false
-    }
-    return true
-  })
-  setConfig(curConfig)
-  response(ctx, 200, null)
-  await next()
-})
-
-router.post('/add', async (ctx, next) => {
-  const body = ctx.request.body
-  const { name, type, path } = body
-  if (!check(body, [['name', 'string'], ['type', 'string']])) {
-    response(ctx, 400, null, {
-      message: 'Param error, check it and retry.'
-    })
-    await next()
-    return
-  }
-  const curConfig = getConfig()
-  let hasPlugin = false
-  for (const plugin of curConfig.plugins || []) {
-    if (plugin.name === name) {
-      hasPlugin = true
-    }
-  }
-  if (hasPlugin) {
-    response(ctx, 400, null, {
-      message: `Plugin ${name} is already in plugin list.`
-    })
+router.all('/:pluginName/*', async (ctx, next) => {
+  const { pluginName } = ctx.params
+  ctx.request.pluginUrl = ctx.request.url.replace(`/plugin/${pluginName}`, '')
+  if (getPluginModule(pluginName).request) {
+    await getPluginModule(pluginName).request(ctx, next)
   } else {
-    const plugins = curConfig.plugins || []
-    let plugin = null
-    switch (type) {
-      case 'local':
-        plugin = {
-          name,
-          type,
-          path
-        }
-        plugins.push(plugin)
-    }
-    setConfig({
-      ...curConfig,
-      plugins
-    })
-    if (plugin) {
-      await loadPlugin(global.pluginInfo, plugin)
-    }
-    response(ctx, 200, null)
+    await next()
   }
-  await next()
 })
 
 export default router

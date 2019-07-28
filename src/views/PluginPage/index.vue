@@ -1,6 +1,7 @@
 <template>
   <div class="plugin-page">
-    <iframe v-if="plugin && plugin.info && plugin.info.frontendPath" :src="plugin.info.frontendPath" frameborder="0"></iframe>
+    <iframe v-if="plugin && plugin.info && !plugin.info.isDev && plugin.info.frontendPath" :src="plugin.info.frontendPath" frameborder="0"></iframe>
+    <iframe v-if="plugin && plugin.info && plugin.info.isDev && plugin.info.frontendDev" :src="plugin.info.frontendDev" frameborder="0"></iframe>
   </div>
 </template>
 

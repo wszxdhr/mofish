@@ -5,6 +5,10 @@ module.exports = {
       '/api': {
         target: 'http://localhost:8900/',
         changeOrigin: true
+      },
+      '/plugin': {
+        target: 'http://localhost:8900/',
+        changeOrigin: true
       }
     }
   }

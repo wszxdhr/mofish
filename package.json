@@ -53,6 +53,7 @@
     "nodemon": "^1.19.1",
     "sass": "^1.18.0",
     "sass-loader": "^7.1.0",
+    "url-parse": "^1.4.7",
     "vue-template-compiler": "^2.6.10",
     "webpack-cli": "^3.3.6"
   }

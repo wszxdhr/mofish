@@ -1,5 +1,6 @@
 import { getValidPort } from './portInUsed'
 import { addStaticServer, deleteStaticServer } from './frontendStatic'
+import urlParse from 'url-parse'
 import eventBus from '../utils/eventBus'
 import { response, check } from '../utils/response'
 import Koa from 'koa'
@@ -52,6 +53,7 @@ export const initPlugin = async (pluginInfo, plugin) => {
     utils: {
       response,
       check,
+      urlParse,
       // getPluginConfig函数返回一个函数，和setPluginConfig不同
       getConfig: getPluginConfig(plugin.name),
       setConfig: setPluginConfig

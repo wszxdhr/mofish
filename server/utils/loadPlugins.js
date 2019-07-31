@@ -1,4 +1,4 @@
-import { getValidPort } from './portInUsed'
+import { getValidPort, portIsOccupied } from './portInUsed'
 import { addStaticServer, deleteStaticServer } from './frontendStatic'
 import urlParse from 'url-parse'
 import eventBus from '../utils/eventBus'
@@ -56,7 +56,9 @@ export const initPlugin = async (pluginInfo, plugin) => {
       urlParse,
       // getPluginConfig函数返回一个函数，和setPluginConfig不同
       getConfig: getPluginConfig(plugin.name),
-      setConfig: setPluginConfig
+      setConfig: setPluginConfig,
+      portIsOccupied,
+      getValidPort
     },
     eventBus,
     plugins: global.pluginInfo,

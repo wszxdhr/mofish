@@ -1,7 +1,7 @@
 import net from 'net'
 
 // 检测端口是否被占用
-export default function portIsOccupied (port) {
+export function portIsOccupied (port) {
   // 创建服务并监听该端口
   let server = net.createServer().listen(port)
   return new Promise((resolve, reject) => {

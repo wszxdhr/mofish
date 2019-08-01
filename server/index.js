@@ -1,4 +1,5 @@
 // import config from './config'
+import '@babel/polyfill'
 import { getConfig } from './utils/configs'
 import commander from 'commander'
 import PackageConfig from '../package'

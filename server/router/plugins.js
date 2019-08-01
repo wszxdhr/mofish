@@ -26,14 +26,17 @@ router.delete('/delete', async (ctx, next) => {
   }
   const { name } = query
   const curConfig = getConfig()
-  curConfig.plugins = (curConfig.plugins || []).filter(async item => {
+  const result = [];
+  (curConfig.plugins || []).forEach(async item => {
     if (item.name === name) {
       console.log('find static server')
       await unloadPlugin(name)
-      return false
+    } else {
+      result.push(item)
     }
-    return true
   })
+  curConfig.plugins = result
+  console.log(curConfig.plugins)
   setConfig(curConfig)
   response(ctx, 200, null)
   await next()

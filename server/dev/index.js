@@ -19,5 +19,7 @@ if (commander.plugin) {
   if (commander.port) {
     options.args = ['--port', commander.port, '--dev']
   }
-  nodemon(options)
+  nodemon(options).on('restart', (data) => {
+    console.log('restart', data)
+  })
 }

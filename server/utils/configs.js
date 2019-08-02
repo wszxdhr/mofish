@@ -1,10 +1,11 @@
-import config from '../config'
+import getGlobalConfig from '../config'
 import fs from 'fs'
 import fsExists from '../utils/fsExists'
 // require('color')
 import path from 'path'
 
 export function getConfig () {
+  const config = getGlobalConfig(global.commander.dev)
   try {
     console.log('Reading and parsing Config File...')
     const configStr = fs.readFileSync(config.configPath).toString()
@@ -32,6 +33,7 @@ export function getConfig () {
 }
 
 export function setConfig (value) {
+  const config = getGlobalConfig(global.commander.dev)
   if (typeof value === 'function') {
     const result = value(getConfig())
     fs.writeFileSync(config.configPath, JSON.stringify(result))
@@ -41,6 +43,7 @@ export function setConfig (value) {
 }
 
 export function getPluginConfig (pluginName) {
+  const config = getGlobalConfig(global.commander.dev)
   const pluginsDirPath = path.join(config.dir, 'plugins')
   const pluginDirPath = path.join(pluginsDirPath, pluginName)
   const pluginConfigPath = path.join(pluginDirPath, 'config.json')
@@ -63,6 +66,7 @@ export function getPluginConfig (pluginName) {
 }
 
 export function setPluginConfig (pluginName, value) {
+  const config = getGlobalConfig(global.commander.dev)
   const pluginConfigPath = path.join(config.dir, 'plugins', pluginName, 'config.json')
   if (typeof value === 'function') {
     const result = value(getPluginConfig(pluginName)())

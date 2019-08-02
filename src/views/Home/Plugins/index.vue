@@ -59,6 +59,7 @@
 
 <script>
 import { addPlugin, deletePlugin } from '@/api/service/plugins'
+import { searchPackages } from '@/api/service/packages'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'HomePlugins',
@@ -124,6 +125,11 @@ export default {
     })
   },
   created () {
+    searchPackages({
+      name: 'vue'
+    }).then(res => {
+      console.log(res)
+    })
   }
 }
 </script>

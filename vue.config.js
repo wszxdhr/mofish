@@ -3,11 +3,11 @@ module.exports = {
     port: 8908,
     proxy: {
       '/api': {
-        target: 'http://localhost:8900/',
+        target: 'http://localhost:8980/',
         changeOrigin: true
       },
       '/plugin': {
-        target: 'http://localhost:8900/',
+        target: 'http://localhost:8980/',
         changeOrigin: true
       }
     }

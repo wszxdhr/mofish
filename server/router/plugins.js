@@ -36,7 +36,6 @@ router.delete('/delete', async (ctx, next) => {
     }
   })
   curConfig.plugins = result
-  console.log(curConfig.plugins)
   setConfig(curConfig)
   response(ctx, 200, null)
   await next()

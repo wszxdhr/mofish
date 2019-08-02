@@ -22,7 +22,6 @@ export default {
     canvas.height = this.canvasHeight
     this.ctx = canvas.getContext('2d')
     this.render()
-    console.log(this.ctx)
   },
   methods: {
     render () {

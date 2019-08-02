@@ -24,15 +24,17 @@ export default async function (settings) {
 }
 
 export const loadPlugin = async (pluginInfo, plugin) => {
-  pluginInfo[plugin.name] = require(plugin.path).default
+  pluginInfo[plugin.name] = require(plugin.path).default(global.commander.dev)
   console.log('loadPlugin name: ', plugin.name, 'frontend: ', pluginInfo[plugin.name].frontend)
-  const port = await getValidPort(8080)
-  pluginInfo[plugin.name].frontendPath = `http://localhost:${port}`
-  pluginInfo[plugin.name].port = port
   pluginInfo[plugin.name].isDev = global.commander.dev
   pluginInfo[plugin.name].pluginName = plugin.name
+  if (!global.commander.dev) {
+    const port = await getValidPort(8080)
+    pluginInfo[plugin.name].frontend = `http://localhost:${port}`
+    pluginInfo[plugin.name].port = port
+    await addStaticServer(pluginInfo[plugin.name])
+  }
   await initPlugin(pluginInfo[plugin.name], plugin)
-  await addStaticServer(pluginInfo[plugin.name])
   return pluginInfo[plugin.name]
 }
 

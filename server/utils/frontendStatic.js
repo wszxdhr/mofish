@@ -10,11 +10,10 @@ export const addStaticServer = (pluginInfo) => {
     server,
     pluginInfo
   }
-  console.log(`Plugin "${pluginInfo.pluginName}" frontend is running at ${pluginInfo.frontendPath}. Frontend path "${pluginInfo.frontend}"`)
+  console.log(`Plugin "${pluginInfo.pluginName}" frontend is running at ${pluginInfo.frontend}. Frontend path "${pluginInfo.frontend}"`)
 }
 
 export const deleteStaticServer = (pluginName) => {
-  console.log(staticMap[pluginName], staticMap)
   if (staticMap[pluginName] && staticMap[pluginName].hasOwnProperty('server')) {
     staticMap[pluginName].server.close()
     delete staticMap[pluginName]

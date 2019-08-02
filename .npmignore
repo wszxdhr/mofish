@@ -1,0 +1,14 @@
+src
+tests
+public
+server
+.idea
+.git
+babel.config.js
+.gitignore
+.eslintrc.js
+.editroconfig
+.browserslistrc
+package-lock.json
+postcss.config.js
+vue.config.js

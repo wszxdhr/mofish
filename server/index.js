@@ -8,6 +8,9 @@ import loadPlugins from './utils/loadPlugins'
 import PluginsRouter from './router/plugins'
 import PluginRouter from './router/plugin'
 import ProjectRouter from './router/projects'
+import config from './config/index'
+import Static from 'koa-static'
+// import Mount from 'koa-mount'
 // import FrontendRouter from './router/frontend'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
@@ -29,6 +32,12 @@ global.commander = commander;
 
   await loadPlugins(settings)
 
+  if (commander.dev) {
+    console.log('Mofish is running in Development Mode.')
+  } else {
+    app.use(Static(config.frontendPath))
+  }
+
   app
     .use(bodyParser())
     .use(PluginsRouter.routes())
@@ -37,9 +46,6 @@ global.commander = commander;
     .use(PluginRouter.allowedMethods())
     .use(ProjectRouter.routes())
     .use(ProjectRouter.allowedMethods())
-  if (commander.dev) {
-    console.log('Mofish is running in Development Mode.')
-  }
 
   app.listen(port)
 

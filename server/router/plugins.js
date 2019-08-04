@@ -73,6 +73,14 @@ router.post('/add', async (ctx, next) => {
           path
         }
         plugins.push(plugin)
+        break
+      case 'npm':
+        plugin = {
+          name,
+          type,
+          path
+        }
+        plugins.push(plugin)
     }
     setConfig({
       ...curConfig,

@@ -48,8 +48,48 @@
             </el-form>
           </el-tab-pane>
           <el-tab-pane label="NPM" name="npm">
-            To be continued.
-<!--            <el-autocomplete :debounce="500" placeholder="Input name to search plugins." v-model="pluginSearchParam" class="plugin-search-input"></el-autocomplete>-->
+<!--            <el-input :debounce="500" placeholder="Input name to search plugins." v-model="pluginSearchParam" class="plugin-search-input"></el-input>-->
+            <p class="text-secondary-black tac">Installed Local</p>
+            <el-table :data="localList" style="width: 100%" :show-header="false">
+              <el-table-column prop="name"></el-table-column>
+              <el-table-column
+                align="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="success"
+                    v-if="!isAdded(scope.row.name)"
+                    @click="addPluginFromLocalList(scope.row)">Add</el-button>
+                  <el-button
+                    size="mini"
+                    type="info"
+                    disabled
+                    v-if="isAdded(scope.row.name)">Added</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <p class="text-secondary-black tac">NPM Online</p>
+            <el-table :data="npmList" style="width: 100%" :show-header="false">
+              <el-table-column prop="name"></el-table-column>
+              <el-table-column
+                align="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="installAndAddPluginFromNpmList(scope.row.name)" v-if="!isNpmListInstalled(scope.row.name)">Install and Add</el-button>
+                  <el-button
+                    size="mini"
+                    type="success"
+                    @click="addPluginFromNpmList(scope.row)" v-if="isNpmListInstalled(scope.row.name) && !isAdded(scope.row.name)">Add</el-button>
+                  <el-button
+                    size="mini"
+                    type="info"
+                    disabled
+                    v-if="isAdded(scope.row.name)">Added</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -59,7 +99,7 @@
 
 <script>
 import { addPlugin, deletePlugin } from '@/api/service/plugins'
-import { searchPackages } from '@/api/service/packages'
+import { searchPackages, getLocalPackages } from '@/api/service/packages'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'HomePlugins',
@@ -74,24 +114,64 @@ export default {
       addLocalPluginForm: {
         path: '',
         name: ''
-      }
+      },
+      npmList: [],
+      localList: []
     }
   },
   methods: {
     ...mapActions([
       'refreshPlugins'
     ]),
-    addLocalPlugin () {
-      addPlugin({
-        name: this.addLocalPluginForm.name,
-        path: this.addLocalPluginForm.path,
-        type: 'local'
+    installAndAddPluginFromNpmList (pluginName) {
+      this.$alert(`Sorry, feature install is not complete yet, please install plugins global ( npm install -g ${pluginName} ) by your self, and go back refresh this page. This feature will come in few weeks.`)
+    },
+    async addPluginFromLocalList (plugin) {
+      const result = await this.addLocalPlugin({
+        name: plugin.pluginConfig.tabName,
+        path: plugin.pluginPath,
+        type: 'npm'
+      })
+      if (result) {
+        this.showAddDialog = false
+      }
+    },
+    addPluginFromNpmList (plugin) {
+      for (const item of this.localList) {
+        if (item.name === plugin.name) {
+          this.addPluginFromLocalList(item)
+          return
+        }
+      }
+    },
+    isAdded (pluginName) {
+      for (const item of this.pluginList) {
+        if (item.info && item.info.packageJson && item.info.packageJson.name === pluginName) {
+          return true
+        }
+      }
+      return false
+    },
+    isNpmListInstalled (pluginName) {
+      for (const item of this.localList) {
+        if (item.name === pluginName) {
+          return true
+        }
+      }
+      return false
+    },
+    addLocalPlugin ({ type = 'local', name = this.addLocalPluginForm.name, path = this.addLocalPluginForm.path }) {
+      return addPlugin({
+        name,
+        path,
+        type
       }).then(res => {
         if (!res.result) {
           this.$message.success('Add plugin success')
           this.showAddDialog = false
           this.clearAddPluginForm()
           this.refreshPlugins()
+          return true
         }
       })
     },
@@ -126,9 +206,16 @@ export default {
   },
   created () {
     searchPackages({
-      name: 'vue'
+      name: 'mofish-plugin-'
     }).then(res => {
-      console.log(res)
+      if (res.data) {
+        this.npmList = res.data
+      }
+    })
+    getLocalPackages().then(res => {
+      if (res.data) {
+        this.localList = res.data
+      }
     })
   }
 }

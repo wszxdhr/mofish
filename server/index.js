@@ -8,9 +8,13 @@ import loadPlugins from './utils/loadPlugins'
 import PluginsRouter from './router/plugins'
 import PluginRouter from './router/plugin'
 import ProjectRouter from './router/projects'
+import PackageRouter from './router/packages'
 import getGlobalConfig from './config/index'
 import Static from 'koa-static'
-import { getLocalPackages, getOnlinePackages } from './utils/getPackages'
+import eventBus from './utils/eventBus'
+// import Proxy from 'koa-server-http-proxy'
+// import { getLocalPackages } from './utils/getPackages'
+// import libnpmsearch from 'libnpmsearch'
 // import Mount from 'koa-mount'
 // import FrontendRouter from './router/frontend'
 import Koa from 'koa'
@@ -25,10 +29,10 @@ commander.parse(process.argv)
 global.commander = commander;
 
 (async function () {
-  console.log(await getLocalPackages())
-  getOnlinePackages()
+  // console.log(await libnpmsearch('vue'))
   const settings = getConfig()
   global.settings = settings
+  global.eventBus = eventBus
 
   const app = new Koa()
 
@@ -49,9 +53,14 @@ global.commander = commander;
     .use(PluginRouter.allowedMethods())
     .use(ProjectRouter.routes())
     .use(ProjectRouter.allowedMethods())
+    .use(PackageRouter.routes())
+    .use(PackageRouter.allowedMethods())
 
   const port = await getValidPort(settings.port || commander.port || 8080)
   app.listen(port)
+  eventBus.$emit('serverStart', {
+    port
+  })
 
   console.log(`App is started at port ${port}`)
 })()

@@ -30,9 +30,9 @@ export const loadPlugin = async (pluginInfo, plugin) => {
   pluginInfo[plugin.name].pluginName = plugin.name
   if (!global.commander.dev) {
     const port = await getValidPort(8080)
-    pluginInfo[plugin.name].frontend = `http://localhost:${port}`
     pluginInfo[plugin.name].port = port
     await addStaticServer(pluginInfo[plugin.name])
+    pluginInfo[plugin.name].frontend = `http://localhost:${port}`
   }
   await initPlugin(pluginInfo[plugin.name], plugin)
   return pluginInfo[plugin.name]

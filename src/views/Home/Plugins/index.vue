@@ -42,7 +42,7 @@
                 <el-input v-model="addLocalPluginForm.path" placeholder="Please input a absolute path."></el-input>
               </el-form-item>
               <el-form-item class="tal">
-                <el-button type="primary" @click="addLocalPlugin">Add plugin</el-button>
+                <el-button type="primary" @click="addLocalPlugin({})">Add plugin</el-button>
                 <el-button @click="showAddDialog = false">Cancel</el-button>
               </el-form-item>
             </el-form>

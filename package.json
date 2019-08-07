@@ -4,7 +4,7 @@
     "mofish": "bin/mofish",
     "mofish-dev": "server-dist/dev/index.js"
   },
-  "version": "0.2.1",
+  "version": "0.2.2",
   "files": [
     "dist",
     "bin",
@@ -38,6 +38,7 @@
     "koa-server-http-proxy": "^0.1.0",
     "koa-static": "^5.0.0",
     "libnpmsearch": "^2.0.2",
+    "lsof": "^0.1.0",
     "net": "^1.0.2",
     "nodemon": "^1.19.1",
     "url-parse": "^1.4.7",

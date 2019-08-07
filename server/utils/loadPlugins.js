@@ -7,6 +7,7 @@ import Koa from 'koa'
 import KoaStatic from 'koa-static'
 import KoaRouter from 'koa-router'
 import { getPluginConfig, setPluginConfig } from '../utils/configs'
+import lsof from 'lsof'
 const pluginModules = {}
 
 export default async function (settings) {
@@ -53,6 +54,7 @@ export const initPlugin = async (pluginInfo, plugin) => {
       KoaRouter
     },
     utils: {
+      lsof,
       response,
       check,
       urlParse,

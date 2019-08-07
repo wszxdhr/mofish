@@ -65,11 +65,11 @@ export function getPluginConfig (pluginName) {
   }
 }
 
-export function setPluginConfig (pluginName, value) {
+export async function setPluginConfig (pluginName, value) {
   const config = getGlobalConfig(global.commander.dev)
   const pluginConfigPath = path.join(config.dir, 'plugins', pluginName, 'config.json')
   if (typeof value === 'function') {
-    const result = value(getPluginConfig(pluginName)())
+    const result = await value(getPluginConfig(pluginName)())
     fs.writeFileSync(pluginConfigPath, JSON.stringify(result))
   } else {
     fs.writeFileSync(pluginConfigPath, JSON.stringify(value))

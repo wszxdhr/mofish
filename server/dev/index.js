@@ -14,7 +14,8 @@ if (commander.plugin) {
     script: path.join(__dirname, '../index.js'),
     exec: 'npm run lint:server && babel-node --presets env --plugins babel-plugin-syntax-object-rest-spread',
     watch: [path.join(__dirname, '../'), commander.plugin],
-    ignore: path.join(commander.plugin, 'src')
+    ignore: path.join(commander.plugin, 'src'),
+    delay: 2000
   }
   if (commander.port) {
     options.args = ['--port', commander.port, '--dev']

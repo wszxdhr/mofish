@@ -4,7 +4,7 @@
     "mofish": "bin/mofish",
     "mofish-dev": "server-dist/dev/index.js"
   },
-  "version": "0.2.2",
+  "version": "0.2.3",
   "files": [
     "dist",
     "bin",
